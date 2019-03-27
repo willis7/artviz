@@ -13,16 +13,16 @@ YELLOW_COLOR=\x1b[33;01m
 # Go tasks
 ###
 compile-linux:
-	@echo "$(GREEN_COLOR)Compiling linux binaries in ./bin $(END_COLOR)"
-	CGO_ENABLED=0 GOOS=linux go build -o bin/linux/$(NAME)
+	@echo "$(GREEN_COLOR)Compiling linux binaries in ./dist $(END_COLOR)"
+	CGO_ENABLED=0 GOOS=linux go build -o dist/linux/$(NAME)
 
 compile-win:
-	@echo "$(GREEN_COLOR)Compiling win binaries in ./bin $(END_COLOR)"
-	CGO_ENABLED=0 GOOS=windows go build -o bin/win/$(NAME).exe
+	@echo "$(GREEN_COLOR)Compiling win binaries in ./dist $(END_COLOR)"
+	CGO_ENABLED=0 GOOS=windows go build -o dist/win/$(NAME).exe
 
 compile-mac:
-	@echo "$(GREEN_COLOR)Compiling mac binaries in ./bin $(END_COLOR)"
-	CGO_ENABLED=0 GOOS=darwin go build -o bin/mac/$(NAME)
+	@echo "$(GREEN_COLOR)Compiling mac binaries in ./dist $(END_COLOR)"
+	CGO_ENABLED=0 GOOS=darwin go build -o dist/mac/$(NAME)
 
 compile: compile-mac compile-win compile-linux
 

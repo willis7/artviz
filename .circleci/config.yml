@@ -1,0 +1,44 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.12
+
+    working_directory: ~/github.com/willis7/artviz
+    steps:
+      - checkout
+      - run:
+          name: "validate"
+          command: |
+            go test -v ./...
+      - run:
+          name: "build releases"
+          command: |
+            go get github.com/mitchellh/gox
+            gox -output "dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
+
+      - persist_to_workspace:
+          root: ~/github.com/willis7/artviz
+          paths:
+            - ./dist/
+
+  publish-github-release:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - attach_workspace:
+          at: ./
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            VERSION=0.1
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION}-${CIRCLE_BUILD_NUM} ./dist/
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - build
+      - publish-github-release:
+          requires:
+            - build
